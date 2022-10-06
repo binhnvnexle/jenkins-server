@@ -73,7 +73,7 @@ export class BookmarkController {
                 filterParams.where[item.field] = item.value;
             }
         });
-        return this.bookmarkService.getBookmarks(userId, filterParams);
+        return this.bookmarkService.getBookmarks(filterParams);
     }
 
     // swagger decorators

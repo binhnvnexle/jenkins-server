@@ -66,11 +66,24 @@ $ yarn test:e2e
 
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
+## References
+
+-   [Building a REST API with NestJS and Prisma
+    SERIES](https://www.prisma.io/blog/nestjs-prisma-rest-api-7D056s1BmOL0#group-endpoints-together-in-swagger)
+-   [Nestjs course for beginner](https://www.youtube.com/watch?v=GHTA143_b-s)
+-   [Building scalable Node.js apps](https://www.youtube.com/watch?v=k6ya4ZVlMAg)
+-   [Nestjs Transaction](https://www.prisma.io/docs/concepts/components/prisma-client/transactions#interactive-transactions-in-preview)
+-   https://juejin.cn/post/7081615360725614600
+-   https://github.com/nestjs/nest/tree/master/sample
+-   https://dev.to/secmohammed/nestjs-caching-globally-neatly-1e17
+-   https://docs.nestjs.com/microservices/redis
+-   https://wanago.io/2021/11/15/api-nestjs-authorization-roles-claims/
+
 ## Stay in touch
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+-   Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
+-   Website - [https://nestjs.com](https://nestjs.com/)
+-   Twitter - [@nestframework](https://twitter.com/nestframework)
 
 ## License
 

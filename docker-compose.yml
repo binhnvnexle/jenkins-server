@@ -1,0 +1,72 @@
+version: '3.8'
+services:
+    dev-db:
+        image: postgres:13.5
+        restart: always
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=123
+        volumes:
+            - postgres:/var/lib/postgresql/data
+        ports:
+            - '5434:5432'
+    test-db:
+        image: postgres:13.5
+        restart: always
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=123
+        volumes:
+            - postgres:/var/lib/postgresql/data
+        ports:
+            - '5435:5432'
+    dev-redis:
+        image: 'redis:alpine'
+        ports:
+            - '6379:6379'
+        command: redis-server --save 20 1 --loglevel warning --requirepass SecureRedisPassportNotForSharing
+        volumes:
+            - cache:/var/lib/redis/data
+    test-redis:
+        image: 'redis:alpine'
+        ports:
+            - '6380:6379'
+        command: redis-server --save 20 1 --loglevel warning --requirepass SecureRedisPassportNotForSharing
+        volumes:
+            - cache:/var/lib/redis/data
+    api:
+        container_name: bookmarks-api
+        build:
+            context: ./
+            target: production
+        image: bookmarks-api
+        depends_on:
+            - dev-db
+            - dev-redis
+        ports:
+            - 3000:3000
+        environment:
+            DATABASE_URL: 'postgresql://postgres:123@localhost:5434/nest?schema=public'
+            JWT_ACCESS_TOKEN_SECRET: super jwt token secret value
+            JWT_ACCESS_TOKEN_EXP: '15m'
+            JWT_REFRESH_TOKEN_SECRET: 'super jwt refresh secret value'
+            JWT_REFRESH_TOKEN_EXP: '3d'
+            SWAGGER_USER: 'admin'
+            SWAGGER_PASSWORD: 'PlsLetMeInTheSwagger'
+            SWAGGER_ENABLED: true
+            SWAGGER_PATH: 'docs'
+            NODE_ENV: 'production'
+            REDIS_HOST: 'localhost'
+            REDIS_PORT: 6379
+            REDIS_PASSWORD: 'SecureRedisPassportNotForSharing'
+            DEFAULT_CACHE_TTL: 60
+            MAX_CACHE_ITEM: 1000
+            PORT: 3000
+        links:
+            - dev-db
+            - dev-redis
+        volumes:
+            - ./:/src
+volumes:
+    postgres:
+    cache:
