@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { Prisma, User } from '@prisma/client';
+import { Prisma, User } from '.prisma/client';
 import * as argon from 'argon2';
 import { Cache } from 'cache-manager';
 import * as sha1 from 'sha1';

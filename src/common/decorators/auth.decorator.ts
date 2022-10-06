@@ -1,6 +1,6 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
-import { UserRole } from '@prisma/client';
+import { UserRole } from '.prisma/client';
 import { Roles } from '../../auth/decorators';
 
 export function Auth(role: UserRole, swaggerTagName: string) {

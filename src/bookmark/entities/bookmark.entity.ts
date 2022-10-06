@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Bookmark } from '@prisma/client';
+import { Bookmark } from '.prisma/client';
 
 export class BookmarkEntity implements Bookmark {
     @ApiProperty()

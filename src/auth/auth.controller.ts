@@ -9,7 +9,7 @@ import {
     ApiTags,
     ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { User, User as UserModel } from '@prisma/client';
+import { User, User as UserModel } from '.prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuthService } from './auth.service';
 import { GetUser, Public } from './decorators';

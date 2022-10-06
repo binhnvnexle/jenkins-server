@@ -11,6 +11,7 @@ import { HttpCacheInterceptor } from './common/interceptors';
 import { validate } from './common/validates';
 import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
+import { PostModule } from './post/post.module';
 
 export const logger = WinstonModule.createLogger({
     level: process.env.LOG_LEVEL || 'verbose',
@@ -41,6 +42,7 @@ export const logger = WinstonModule.createLogger({
         UserModule,
         BookmarkModule,
         PrismaModule,
+        PostModule,
     ],
     providers: [
         Logger,

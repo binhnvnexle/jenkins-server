@@ -19,7 +19,7 @@ import {
     ApiOperation,
 } from '@nestjs/swagger';
 
-import { Bookmark as BookmarkModel, UserRole } from '@prisma/client';
+import { Bookmark as BookmarkModel, UserRole } from '.prisma/client';
 import { GetUser } from '../auth/decorators';
 import { getPaginationParams } from '../common';
 import { Auth } from '../common/decorators/auth.decorator';

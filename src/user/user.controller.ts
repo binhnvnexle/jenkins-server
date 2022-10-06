@@ -6,7 +6,7 @@ import {
     ApiTags,
     ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { User as UserModel } from '@prisma/client';
+import { User as UserModel } from '.prisma/client';
 import { GetUser } from '../auth/decorators';
 import { EditUserDto } from './dto';
 import { UserEntity } from './entities';
