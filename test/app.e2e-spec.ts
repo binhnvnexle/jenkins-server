@@ -3,8 +3,8 @@ import { Test } from '@nestjs/testing';
 import * as pactum from 'pactum';
 import { AppModule } from '../src/app.module';
 import { AuthDto } from '../src/auth/dto';
-import { CreateBookmarkDto } from '../src/bookmark/dto';
-import { EditBookmarkDto } from '../src/bookmark/dto/edit-bookmark.dto';
+import { CreateBookmarkDto, EditBookmarkDto } from '../src/bookmark/dto';
+import { CreateCategoryDto } from '../src/category/dto';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { EditUserDto } from '../src/user/dto';
 
@@ -303,6 +303,101 @@ describe('App e2e', () => {
                     .withHeaders({ Authorization: 'Bearer $S{userAt}' })
                     .expectStatus(200)
                     .expectBody([]);
+            });
+        });
+    });
+
+    describe('Catetory', () => {
+        const createCategoryDto: CreateCategoryDto = {
+            name: 'test category',
+        };
+        describe('should return empty category', () => {
+            it('should return empty list', () => {
+                return pactum
+                    .spec()
+                    .get('/categories')
+                    .withHeaders({ Authorization: 'Bearer $S{userAt}' })
+                    .expectStatus(200)
+                    .expectBody([]);
+            });
+
+            it('should throw when name is empty', () => {
+                return pactum
+                    .spec()
+                    .post('/categories')
+                    .withHeaders({ Authorization: 'Bearer $S{userAt}' })
+                    .withBody({})
+                    .expectStatus(400);
+            });
+
+            it('should add a new category', () => {
+                return pactum
+                    .spec()
+                    .post('/categories')
+                    .withHeaders({ Authorization: 'Bearer $S{userAt}' })
+                    .withBody(createCategoryDto)
+                    .expectStatus(201)
+                    .stores('categoryId', 'id');
+            });
+
+            it('should get category list', () => {
+                return pactum
+                    .spec()
+                    .get('/categories')
+                    .withHeaders({ Authorization: 'Bearer $S{userAt}' })
+                    .expectStatus(200)
+                    .expectJsonLength(1);
+            });
+        });
+    });
+
+    describe('Posts', () => {
+        describe('should return empty posts', () => {
+            const createPostDto = {
+                title: 'test title',
+                description: 'test desc',
+            };
+
+            it('should return empty list', () => {
+                return pactum
+                    .spec()
+                    .get('/posts')
+                    .withHeaders({ Authorization: 'Bearer $S{userAt}' })
+                    .expectStatus(200)
+                    .expectBody([]);
+            });
+
+            it('should throw if category does not exist', () => {
+                return pactum
+                    .spec()
+                    .post('/posts')
+                    .withHeaders({ Authorization: 'Bearer $S{userAt}' })
+                    .withBody({ title: createPostDto.title, category: 12 })
+                    .expectStatus(400);
+            });
+
+            it('should throw if category is empty', () => {
+                return pactum
+                    .spec()
+                    .post('/posts')
+                    .withHeaders({ Authorization: 'Bearer $S{userAt}' })
+                    .withBody({
+                        title: createPostDto.title,
+                        description: createPostDto.description,
+                    })
+                    .expectStatus(400);
+            });
+
+            it('should add new post', () => {
+                return pactum
+                    .spec()
+                    .post('/posts')
+                    .withHeaders({ Authorization: 'Bearer $S{userAt}' })
+                    .withBody({
+                        ...createPostDto,
+                        categoryId: '$S{categoryId}',
+                    })
+                    .expectStatus(201);
             });
         });
     });

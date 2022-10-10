@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as Sentry from '@sentry/node';
+import { useContainer } from 'class-validator';
 import * as basicAuth from 'express-basic-auth';
 import { AppModule, logger } from './app.module';
 import { SentryInterceptor } from './common/interceptors';
@@ -26,9 +27,12 @@ async function bootstrap() {
         });
     }
 
+    // Allow app to inject service to custom class validators
+    useContainer(app.select(AppModule), { fallbackOnErrors: true });
+
     // Error log to Sentry
     Sentry.init({
-        dsn: 'https://18c6dbdf42784e7d9a9362edfaa31afc@o1420252.ingest.sentry.io/6765449',
+        dsn: config.get('SENTRY_DSN'),
     });
     app.useGlobalInterceptors(new SentryInterceptor());
 

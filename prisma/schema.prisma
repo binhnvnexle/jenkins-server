@@ -22,15 +22,16 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  email String @unique
-  hash  String
+  email String @unique @db.VarChar(64)
+  hash  String @db.VarChar(255)
 
-  firstName String?
-  lastName  String?
+  firstName String? @db.VarChar(32)
+  lastName  String? @db.VarChar(32)
 
   bookmarks Bookmark[]
   tokens    Token[]
   role      UserRole   @default(USER)
+  posts     Post[]
 
   @@map("users")
 }
@@ -40,9 +41,9 @@ model Bookmark {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  title       String
+  title       String  @db.VarChar(255)
   description String?
-  link        String
+  link        String  @db.VarChar(255)
 
   userId Int
   user   User @relation(fields: [userId], references: [id])
@@ -56,9 +57,52 @@ model Token {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  refreshTokenSha1 String
+  refreshTokenSha1 String @db.VarChar(40)
   userId           Int
   user             User   @relation(fields: [userId], references: [id])
 
   @@map("tokens")
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  title       String  @db.VarChar(255)
+  description String?
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  categoryId Int
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  tags Tag[]
+
+  @@map("posts")
+}
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name String @unique @db.VarChar(255)
+
+  posts Post[]
+
+  @@map("categories")
+}
+
+model Tag {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name String @unique @db.VarChar(255)
+
+  posts Post[]
+
+  @@map("tags")
 }

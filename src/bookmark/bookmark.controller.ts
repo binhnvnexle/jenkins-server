@@ -19,15 +19,15 @@ import {
     ApiOperation,
 } from '@nestjs/swagger';
 
-import { Bookmark as BookmarkModel, UserRole } from '.prisma/client';
+import { Bookmark as BookmarkModel } from '.prisma/client';
 import { GetUser } from '../auth/decorators';
 import { getPaginationParams } from '../common';
-import { Auth } from '../common/decorators/auth.decorator';
+import { SwaggerController } from '../common/decorators/swagger-controller.decorator';
 import { BookmarkService } from './bookmark.service';
 import { CreateBookmarkDto, EditBookmarkDto, PaginationBookmarkQueryDto } from './dto';
 import { BookmarkEntity } from './entities';
 
-@Auth(UserRole.USER, 'bookmarks')
+@SwaggerController('bookmarks')
 @Controller('bookmarks')
 export class BookmarkController {
     constructor(private bookmarkService: BookmarkService, private readonly logger: Logger) {}
@@ -68,11 +68,7 @@ export class BookmarkController {
             order: pagination.sort[0],
             where: { userId: userId, title: paginationQueryDto.title || undefined },
         };
-        pagination.search.map((item) => {
-            if (item.field === 'title' && item.value) {
-                filterParams.where[item.field] = item.value;
-            }
-        });
+        ('get bookmarks');
         return this.bookmarkService.getBookmarks(filterParams);
     }
 

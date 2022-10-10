@@ -53,7 +53,7 @@ class EnvironmentVariables {
     REDIS_PASSWORD: string;
 
     @IsNumber()
-    CACHE_TTL: number;
+    CACHE_TTL_IN_SECOND: number;
 
     @IsNumber()
     CACHE_MAX_ITEM: number;
@@ -65,6 +65,10 @@ class EnvironmentVariables {
     @IsString()
     @IsEnum(LogLevel)
     LOG_LEVEL: string;
+
+    @IsNotEmpty()
+    @IsString()
+    SENTRY_DSN: string;
 }
 
 export function validate(config: Record<string, unknown>) {

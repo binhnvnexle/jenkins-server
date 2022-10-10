@@ -12,7 +12,7 @@ export class UserService {
         dto: { email: string; password: string },
         trx?: Prisma.TransactionClient,
     ): Promise<User> {
-        const prisma = this.prisma || trx;
+        const prisma = trx || this.prisma;
         const hash = await argon.hash(dto.password);
 
         // save the new user in db

@@ -4,20 +4,32 @@ services:
         image: postgres:13.5
         restart: always
         environment:
-            - POSTGRES_USER=postgres
-            - POSTGRES_PASSWORD=123
+            - POSTGRES_USER=user_test
+            - POSTGRES_PASSWORD=LetMeAccessDbPass
         volumes:
-            - postgres:/var/lib/postgresql/data
+            - db:/var/lib/postgresql/data
         ports:
             - '5434:5432'
+    dev-db-mysql:
+        image: mysql:8.0
+        cap_add:
+            - SYS_NICE
+        restart: always
+        environment:
+            - MYSQL_USER=user_test
+            - MYSQL_PASSWORD=LetMeAccessDbPass
+            - MYSQL_DATABASE=nest
+            - MYSQL_ROOT_PASSWORD=PlsLetMeLoggedInWithThisSecurePwd
+        ports:
+            - '3307:3306'
+        volumes:
+            - db:/var/lib/mysql
     test-db:
         image: postgres:13.5
         restart: always
         environment:
-            - POSTGRES_USER=postgres
-            - POSTGRES_PASSWORD=123
-        volumes:
-            - postgres:/var/lib/postgresql/data
+            - POSTGRES_USER=user_test
+            - POSTGRES_PASSWORD=LetMeAccessDbPass
         ports:
             - '5435:5432'
     dev-redis:
@@ -32,8 +44,6 @@ services:
         ports:
             - '6380:6379'
         command: redis-server --save 20 1 --loglevel warning --requirepass SecureRedisPassportNotForSharing
-        volumes:
-            - cache:/var/lib/redis/data
     api:
         container_name: bookmarks-api
         build:
@@ -48,9 +58,9 @@ services:
         environment:
             DATABASE_URL: 'postgresql://postgres:123@localhost:5434/nest?schema=public'
             JWT_ACCESS_TOKEN_SECRET: super jwt token secret value
-            JWT_ACCESS_TOKEN_EXP: '15m'
+            JWT_ACCESS_TOKEN_EXP_IN_SECOND: 900
             JWT_REFRESH_TOKEN_SECRET: 'super jwt refresh secret value'
-            JWT_REFRESH_TOKEN_EXP: '3d'
+            JWT_REFRESH_TOKEN_EXP_IN_SECOND: 259500
             SWAGGER_USER: 'admin'
             SWAGGER_PASSWORD: 'PlsLetMeInTheSwagger'
             SWAGGER_ENABLED: true
@@ -59,7 +69,7 @@ services:
             REDIS_HOST: 'localhost'
             REDIS_PORT: 6379
             REDIS_PASSWORD: 'SecureRedisPassportNotForSharing'
-            DEFAULT_CACHE_TTL: 60
+            CACHE_TTL_IN_SECOND: 60
             MAX_CACHE_ITEM: 1000
             PORT: 3000
         links:
@@ -68,5 +78,5 @@ services:
         volumes:
             - ./:/src
 volumes:
-    postgres:
+    db:
     cache:

@@ -7,7 +7,6 @@ export function getPaginationParams(params: PaginationQueryDto): Pagination {
         skip: 0,
         take: 10,
         sort: [],
-        search: [],
         cursor: 0,
     };
 

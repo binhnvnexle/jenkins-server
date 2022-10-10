@@ -38,7 +38,10 @@ export class HttpCacheInterceptor extends CacheInterceptor {
             setTimeout(async () => {
                 const keys: string[] = await this.cacheManager.store.keys();
                 keys.forEach((key) => {
-                    if (key.startsWith(currentUrlPath) || currentUrlPath.startsWith(key)) {
+                    if (
+                        key.startsWith(currentUrlPath) ||
+                        currentUrlPath.startsWith(key.split('?')[0])
+                    ) {
                         this.cacheManager.del(key);
                     }
                 });

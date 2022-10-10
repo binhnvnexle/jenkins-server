@@ -1,3 +1,4 @@
+import { Prisma, User } from '.prisma/client';
 import {
     CACHE_MANAGER,
     ForbiddenException,
@@ -7,7 +8,6 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { Prisma, User } from '.prisma/client';
 import * as argon from 'argon2';
 import { Cache } from 'cache-manager';
 import * as sha1 from 'sha1';
@@ -30,7 +30,7 @@ export class AuthService {
         try {
             return await this.prisma.$transaction(async (trx) => {
                 const user = await this.userService.createUser(dto, trx);
-                // return the saved user
+
                 return user;
             });
         } catch (err) {
@@ -42,7 +42,7 @@ export class AuthService {
         }
     }
 
-    async validateUser(dto: AuthDto, trx?: Prisma.TransactionClient): Promise<User> {
+    async validateUser(dto: AuthDto): Promise<User> {
         // get the user by email
         const user = await this.userService.findOne({ email: dto.email });
         if (!user) {

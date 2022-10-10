@@ -3,5 +3,5 @@ export interface Pagination {
     take?: number;
     cursor?: number;
     sort?: { field: string; by: 'asc' | 'desc' }[];
-    search?: { field: string; value: string }[];
+    // search?: { field: string; value: string }[];
 }
