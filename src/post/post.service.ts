@@ -4,15 +4,16 @@ import { CategoryService } from '../category/category.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { EditPostDto } from './dto';
 import { CreatePostDto } from './dto/create-post.dto';
+import { PostFilterType } from './types/post-filter.type';
 
 @Injectable()
 export class PostService {
-    constructor(private prismaService: PrismaService, private categoryService: CategoryService) {}
+    constructor(private prisma: PrismaService, private categoryService: CategoryService) {}
 
     createPost(userId: number, dto: CreatePostDto): Promise<Post> {
         // await this.validatePostCreation(dto);
 
-        return this.prismaService.post.create({
+        return this.prisma.post.create({
             data: {
                 ...dto,
                 userId,
@@ -20,14 +21,27 @@ export class PostService {
         });
     }
 
-    getAllPosts(): Promise<Post[]> {
-        return this.prismaService.post.findMany({
-            where: {},
+    async getPosts(params: PostFilterType): Promise<{ items: Post[]; totalCount: number }> {
+        const totalCount = await this.prisma.post.count({ where: params.where });
+
+        const items = await this.prisma.post.findMany({
+            take: params.take,
+            skip: params.skip,
+            cursor: params.cursor,
+            where: params.where,
+            orderBy: {
+                [params.order.field]: params.order.by,
+            },
+            include: {
+                user: { select: { id: true, firstName: true, lastName: true } },
+                category: { select: { id: true, name: true } },
+            },
         });
+        return { items, totalCount };
     }
 
     getPostById(postId: number) {
-        return this.prismaService.post.findUnique({
+        return this.prisma.post.findUnique({
             where: {
                 id: postId,
             },
@@ -49,7 +63,7 @@ export class PostService {
     }
 
     async editPostById(userId: number, postId: number, dto: EditPostDto): Promise<Post> {
-        const post = await this.prismaService.post.findUnique({
+        const post = await this.prisma.post.findUnique({
             where: {
                 id: postId,
             },
@@ -61,7 +75,7 @@ export class PostService {
 
         // await this.validatePostUpdate(dto);
 
-        return this.prismaService.post.update({
+        return this.prisma.post.update({
             where: {
                 id: postId,
             },
@@ -72,7 +86,7 @@ export class PostService {
     }
 
     async deletePost(userId: number, postId: number): Promise<void> {
-        const post = await this.prismaService.post.findUnique({
+        const post = await this.prisma.post.findUnique({
             where: {
                 id: postId,
             },
@@ -82,7 +96,7 @@ export class PostService {
             throw new ForbiddenException('access denied');
         }
 
-        await this.prismaService.post.delete({
+        await this.prisma.post.delete({
             where: {
                 id: postId,
             },

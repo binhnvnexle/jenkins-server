@@ -6,7 +6,6 @@ import { utilities as nestWinstonModuleUtilities, WinstonModule } from 'nest-win
 import * as winston from 'winston';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard, RolesGuard } from './auth/guards';
-import { BookmarkModule } from './bookmark/bookmark.module';
 import { CategoryModule } from './category/category.module';
 import { Environment } from './common';
 import { HttpCacheInterceptor } from './common/interceptors';
@@ -51,7 +50,6 @@ export const logger = WinstonModule.createLogger({
         }),
         AuthModule,
         UserModule,
-        BookmarkModule,
         PrismaModule,
         PostModule,
         CategoryModule,

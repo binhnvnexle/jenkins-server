@@ -28,28 +28,11 @@ model User {
   firstName String? @db.VarChar(32)
   lastName  String? @db.VarChar(32)
 
-  bookmarks Bookmark[]
   tokens    Token[]
   role      UserRole   @default(USER)
   posts     Post[]
 
   @@map("users")
-}
-
-model Bookmark {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  title       String  @db.VarChar(255)
-  description String?
-  link        String  @db.VarChar(255)
-
-  userId Int
-  user   User @relation(fields: [userId], references: [id])
-
-  @@index([title, link])
-  @@map("bookmarks")
 }
 
 model Token {

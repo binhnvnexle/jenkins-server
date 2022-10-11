@@ -17,7 +17,8 @@ import {
     ApiOkResponse,
     ApiOperation,
 } from '@nestjs/swagger';
-import { Category as CategoryModel } from 'prisma/prisma-client';
+import { Category as CategoryModel, UserRole } from 'prisma/prisma-client';
+import { Roles } from '../auth/decorators';
 import { SwaggerController } from '../common/decorators';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -26,7 +27,7 @@ import { CategoryEntity } from './entities';
 
 @Controller('categories')
 @SwaggerController('categories')
-// @Roles(UserRole.ADMIN)
+@Roles(UserRole.ADMIN)
 @ApiForbiddenResponse({
     description: 'Access denied',
 })

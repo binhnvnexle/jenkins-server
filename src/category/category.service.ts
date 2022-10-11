@@ -7,11 +7,11 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 
 @Injectable()
 export class CategoryService {
-    constructor(private prismaService: PrismaService) {}
+    constructor(private prisma: PrismaService) {}
 
     async createCategory(dto: CreateCategoryDto): Promise<Category> {
         try {
-            const catetory = await this.prismaService.category.create({
+            const catetory = await this.prisma.category.create({
                 data: {
                     ...dto,
                 },
@@ -27,19 +27,19 @@ export class CategoryService {
     }
 
     findOne(findData: { id?: number; name?: string }): Promise<Category | undefined> {
-        return this.prismaService.category.findUnique({
+        return this.prisma.category.findUnique({
             where: findData,
         });
     }
 
     getAllCategories(): Promise<Category[]> {
-        return this.prismaService.category.findMany({
+        return this.prisma.category.findMany({
             where: {},
         });
     }
 
     getCategoryById(categoryId: number) {
-        return this.prismaService.category.findUnique({
+        return this.prisma.category.findUnique({
             where: {
                 id: categoryId,
             },
@@ -47,7 +47,7 @@ export class CategoryService {
     }
 
     async editCategoryById(categoryId: number, dto: EditCategoryDto): Promise<Category> {
-        return this.prismaService.category.update({
+        return this.prisma.category.update({
             where: {
                 id: categoryId,
             },
@@ -58,7 +58,7 @@ export class CategoryService {
     }
 
     async deleteCategory(categoryId: number): Promise<void> {
-        const refCategory = await this.prismaService.category.findFirst({
+        const refCategory = await this.prisma.category.findFirst({
             where: {
                 posts: { some: {} },
             },
@@ -69,7 +69,7 @@ export class CategoryService {
                 409,
             );
         }
-        await this.prismaService.category.delete({
+        await this.prisma.category.delete({
             where: {
                 id: categoryId,
             },
