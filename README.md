@@ -32,10 +32,11 @@
 $ yarn install
 ```
 
-## Setup database
+## Setup database and redis
 
 ```bash
 $ yarn db:dev:restart
+$ npx prisma migrate dev
 $ yarn redis:dev:restart
 $ npx prisma db seed
 ```
