@@ -9,6 +9,26 @@ class EnvironmentVariables {
 
     @IsNotEmpty()
     @IsString()
+    POSTGRES_HOST: string;
+
+    @IsNotEmpty()
+    @IsNumber()
+    POSTGRES_PORT: number;
+
+    @IsNotEmpty()
+    @IsString()
+    POSTGRES_DB: string;
+
+    @IsNotEmpty()
+    @IsString()
+    POSTGRES_USER: string;
+
+    @IsNotEmpty()
+    @IsString()
+    POSTGRES_PASSWORD: string;
+
+    @IsNotEmpty()
+    @IsString()
     DATABASE_URL: string;
 
     @IsNotEmpty()

@@ -36,7 +36,12 @@
         "test:cov": "jest --coverage",
         "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
         "pretest:e2e": "yarn redis:test:restart && yarn db:test:restart",
-        "test:e2e": "dotenv -e .env.test -- jest --watch --no-cache --config ./test/jest-e2e.json"
+        "test:e2e": "dotenv -e .env.test -- jest --watch --no-cache --config ./test/jest-e2e.json",
+        "api:dev:rm": "docker compose rm dev-api -fsv && docker compose rm dev-redis -fs && docker compose rm dev-db -fs",
+        "api:dev:build": "docker compose up dev-api --build -V",
+        "api:dev:up": "docker compose up dev-api -d",
+        "api:dev:rebuild": "yarn api:dev:rm && yarn api:dev:build",
+        "api:dev:restart": "yarn api:dev:rm && yarn api:dev:up"
     },
     "dependencies": {
         "@nestjs/common": "^9.0.0",
@@ -111,6 +116,7 @@
         "testEnvironment": "node"
     },
     "prisma": {
-        "seed": "ts-node prisma/seed.ts"
+        "seed": "ts-node src/database/seed.ts",
+        "schema": "src/database/schema.prisma"
     }
 }

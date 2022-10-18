@@ -1,3 +1,4 @@
+import { User, User as UserModel } from '.prisma/client';
 import { Body, Controller, HttpCode, HttpStatus, Post, UseGuards } from '@nestjs/common';
 import {
     ApiBearerAuth,
@@ -9,8 +10,6 @@ import {
     ApiTags,
     ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { User, User as UserModel } from '.prisma/client';
-import { PrismaService } from '../prisma/prisma.service';
 import { AuthService } from './auth.service';
 import { GetUser, Public } from './decorators';
 import { AuthDto, SignOutDto } from './dto';
@@ -22,7 +21,7 @@ import { JwtRefreshGuard, LocalAuthGuard } from './guards';
 // API decorators
 @Controller('auth')
 export class AuthController {
-    constructor(private authService: AuthService, private prisma: PrismaService) {}
+    constructor(private authService: AuthService) {}
 
     // swagger decorators
     @ApiOperation({ summary: 'Sign up a new email/password account' })

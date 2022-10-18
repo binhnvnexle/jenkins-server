@@ -1,0 +1,40 @@
+# Mac M1 requires node-slim to work until prisma support on Mac M1
+FROM node:18-slim AS development
+
+# Required for Prisma Client to work in container running on Mac M1
+# for node:alpine
+# RUN apk update && apk add --update openssl 
+# for node:lts or node:slim
+# RUN apt-get update && apt-get install -y openssl 
+RUN apt-get update && apt-get install -y openssl 
+
+WORKDIR /usr/src/app
+
+COPY package*.json yarn.lock ./
+
+RUN yarn install --only=development
+
+COPY . .
+
+# Generate Prisma database client code
+RUN npx prisma generate
+
+RUN yarn build
+
+# FROM node:18-alpine as production
+FROM node:18-slim as production
+
+ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+
+RUN yarn install --only=production
+
+COPY . .
+
+COPY --from=development /usr/src/app/dist ./dist
+
+CMD ["node", "dist/src/main"]
