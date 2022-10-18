@@ -1,82 +1,77 @@
 version: '3.8'
 services:
+    dev-api:
+        container_name: nestjs_api_dev
+        image: nestjs-api-dev:1.0.0
+        build:
+            context: .
+            target: development
+            dockerfile: ./Dockerfile.macM1 # On Mac M1, update to point to file ./Dockerfile.macM1
+        command: yarn start:dev
+        ports:
+            - 3001:3000
+        networks:
+            - app_nestjs_net
+            - redis_nestjs_net
+            - postgres_nestjs_net
+        volumes:
+            - .:/usr/src/app
+            - /usr/src/app/node_modules # uncomment this line for Mac M1 only
+        env_file:
+            - .env
+        environment: #overwite environment variables when running API with docker container.
+            - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@nestjs_postgres_dev:5432/${POSTGRES_DB}?schema=public # note the api container has to use postgres internal port and internal hostname, it can't localhost with external port.
+            - REDIS_HOST=nestjs_redis_dev # note that the api has to use redis host name in contrainer, it can't use localhost to access the redis in contrainer
+        restart: unless-stopped
+        depends_on:
+            - dev-db
+            - dev-redis
     dev-db:
         image: postgres:13.5
+        container_name: 'nestjs_postgres_dev'
         restart: always
+        env_file:
+            - .env
         environment:
-            - POSTGRES_USER=user_test
-            - POSTGRES_PASSWORD=LetMeAccessDbPass
+            POSTGRES_DB: ${POSTGRES_DB}
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
         volumes:
-            - db:/var/lib/postgresql/data
+            - pgdevdata:/var/lib/postgresql/data
         ports:
             - '5434:5432'
-    dev-db-mysql:
-        image: mysql:8.0
-        cap_add:
-            - SYS_NICE
-        restart: always
-        environment:
-            - MYSQL_USER=user_test
-            - MYSQL_PASSWORD=LetMeAccessDbPass
-            - MYSQL_DATABASE=nest
-            - MYSQL_ROOT_PASSWORD=PlsLetMeLoggedInWithThisSecurePwd
-        ports:
-            - '3307:3306'
-        volumes:
-            - db:/var/lib/mysql
+        networks:
+            - postgres_nestjs_net
     test-db:
         image: postgres:13.5
+        container_name: 'nestjs_postgres_test'
         restart: always
         environment:
-            - POSTGRES_USER=user_test
-            - POSTGRES_PASSWORD=LetMeAccessDbPass
+            POSTGRES_DB: ${POSTGRES_DB}
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
         ports:
             - '5435:5432'
     dev-redis:
         image: 'redis:alpine'
+        container_name: 'nestjs_redis_dev'
         ports:
             - '6379:6379'
         command: redis-server --save 20 1 --loglevel warning --requirepass SecureRedisPassportNotForSharing
         volumes:
-            - cache:/var/lib/redis/data
+            - rddevdata:/var/lib/redis/data
+        networks:
+            - redis_nestjs_net
     test-redis:
         image: 'redis:alpine'
+        container_name: 'nestjs_redis_test'
         ports:
             - '6380:6379'
         command: redis-server --save 20 1 --loglevel warning --requirepass SecureRedisPassportNotForSharing
-    api:
-        container_name: bookmarks-api
-        build:
-            context: ./
-            target: production
-        image: bookmarks-api
-        depends_on:
-            - dev-db
-            - dev-redis
-        ports:
-            - 3000:3000
-        environment:
-            DATABASE_URL: 'postgresql://postgres:123@localhost:5434/nest?schema=public'
-            JWT_ACCESS_TOKEN_SECRET: super jwt token secret value
-            JWT_ACCESS_TOKEN_EXP_IN_SECOND: 900
-            JWT_REFRESH_TOKEN_SECRET: 'super jwt refresh secret value'
-            JWT_REFRESH_TOKEN_EXP_IN_SECOND: 259500
-            SWAGGER_USER: 'admin'
-            SWAGGER_PASSWORD: 'PlsLetMeInTheSwagger'
-            SWAGGER_ENABLED: true
-            SWAGGER_PATH: 'docs'
-            NODE_ENV: 'production'
-            REDIS_HOST: 'localhost'
-            REDIS_PORT: 6379
-            REDIS_PASSWORD: 'SecureRedisPassportNotForSharing'
-            CACHE_TTL_IN_SECOND: 60
-            MAX_CACHE_ITEM: 1000
-            PORT: 3000
-        links:
-            - dev-db
-            - dev-redis
-        volumes:
-            - ./:/src
 volumes:
-    db:
-    cache:
+    pgdevdata:
+    rddevdata:
+networks:
+    postgres_nestjs_net:
+    redis_nestjs_net:
+    app_nestjs_net:
