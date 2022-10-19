@@ -20,8 +20,8 @@ services:
         env_file:
             - .env
         environment: #overwite environment variables when running API with docker container.
-            - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@nestjs_postgres_dev:5432/${POSTGRES_DB}?schema=public # note the api container has to use postgres internal port and internal hostname, it can't localhost with external port.
-            - REDIS_HOST=nestjs_redis_dev # note that the api has to use redis host name in contrainer, it can't use localhost to access the redis in contrainer
+            DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@nestjs_postgres_dev:5432/${POSTGRES_DB}?schema=public # note the api container has to use postgres internal port and internal hostname, it can't localhost with external port.
+            REDIS_HOST: nestjs_redis_dev # note that the api has to use redis host name in contrainer, it can't use localhost to access the redis in contrainer
         restart: unless-stopped
         depends_on:
             - dev-db
