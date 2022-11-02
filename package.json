@@ -14,8 +14,8 @@
         "redis:dev:up": "docker compose up dev-redis -d",
         "redis:dev:restart": "yarn redis:dev:rm && yarn redis:dev:up",
         "prisma:test:deploy": "dotenv -e .env.test -- prisma migrate deploy",
-        "prisma:open:studio:dev": "npx prisma studio",
-        "prisma:open:studio:test": "dotenv -e .env.test npx prisma studio",
+        "prisma:studio:dev": "npx prisma studio",
+        "prisma:studio:test": "dotenv -e .env.test npx prisma studio",
         "db:test:rm": "docker compose rm test-db -s -f -v",
         "db:test:up": "docker compose up test-db -d",
         "db:test:restart": "yarn db:test:rm && yarn db:test:up && sleep 2 && yarn prisma:test:deploy",
@@ -37,11 +37,12 @@
         "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
         "pretest:e2e": "yarn redis:test:restart && yarn db:test:restart",
         "test:e2e": "dotenv -e .env.test -- jest --watch --no-cache --config ./test/jest-e2e.json",
-        "api:dev:rm": "docker compose rm dev-api -fsv && docker compose rm dev-redis -fs && docker compose rm dev-db -fs",
-        "api:dev:build": "docker compose up dev-api --build -V",
-        "api:dev:up": "docker compose up dev-api -d",
-        "api:dev:rebuild": "yarn api:dev:rm && yarn api:dev:build",
-        "api:dev:restart": "yarn api:dev:rm && yarn api:dev:up"
+        "service:dev:restart": "yarn db:dev:restart && yarn redis:dev:restart",
+        "docker:dev:rm": "docker compose rm dev-api -fsv && docker compose rm dev-redis -fs && docker compose rm dev-db -fs",
+        "docker:dev:build": "docker compose up dev-api --build -V",
+        "docker:dev:up": "docker compose up dev-api -d",
+        "docker:dev:rebuild": "yarn docker:dev:rm && yarn docker:dev:build",
+        "docker:dev:restart": "yarn docker:dev:rm && yarn docker:dev:up"
     },
     "dependencies": {
         "@nestjs/common": "^9.0.0",
