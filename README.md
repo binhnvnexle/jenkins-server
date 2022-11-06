@@ -30,6 +30,9 @@ This is a NestJS template for monolith structure used at Nexlesoft. There are th
 
 Check out appropriate branch matching with the database provider you will work with.
 
+Videos about this template can be found at
+[NestJS Training](https://drive.google.com/drive/folders/1tT-k0jy1B3jguufWfQme9mDULWXJZnqs?usp=sharing)
+
 For microservice NestJs template, checkout a different repo at [nestjs-api-microservice-template](https://github.com/nexlesoft/nestjs-api-microservice-template)
 
 ## Installation
