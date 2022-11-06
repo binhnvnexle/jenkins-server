@@ -29,12 +29,21 @@
 ## Installation
 
 ```bash
+# Install all the dependencies
 $ yarn install
+```
+
+## Create environment variables
+
+```bash
+# copy default variables from .env.example to .env
+$ cp .env.example .env
 ```
 
 ## Start mongo and redis docker container
 
 ```bash
+# Start redis and postgres containers
 $ yarn service:dev:restart
 ```
 
@@ -59,6 +68,7 @@ $ yean start:prod
 $ yarn test:e2e
 
 ```
+
 ## License
 
 Nest is [MIT licensed](LICENSE).
