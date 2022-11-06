@@ -1,34 +1,35 @@
 version: '3.8'
 services:
-    dev-api:
-        container_name: nestjs_api_dev
-        image: nestjs-api-dev:1.0.0
+    dev_api:
+        container_name: dev_api_nestjs
+        image: dev-api-nestjs:1.0.0
         build:
             context: .
             target: development
-            dockerfile: ./Dockerfile.macM1 # On Mac M1, update to point to file ./Dockerfile.macM1
+            dockerfile: Dockerfile # On Mac M1, update to point to file ./Dockerfile
         command: yarn start:dev
         ports:
-            - 3001:3000
+            - ${API_HOST_PORT}:${API_CONTAINER_PORT}
         networks:
-            - app_nestjs_net
-            - redis_nestjs_net
-            - postgres_nestjs_net
+            - api-network
+            - api-redis-network
+            - api-postgres-network
         volumes:
             - .:/usr/src/app
-            - /usr/src/app/node_modules # uncomment this line for Mac M1 only
+            - /usr/src/app/node_modules 
         env_file:
             - .env
         environment: #overwite environment variables when running API with docker container.
-            DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@nestjs_postgres_dev:5432/${POSTGRES_DB}?schema=public # note the api container has to use postgres internal port and internal hostname, it can't localhost with external port.
-            REDIS_HOST: nestjs_redis_dev # note that the api has to use redis host name in contrainer, it can't use localhost to access the redis in contrainer
+            DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_CONTAINER_NAME}:${POSTGRES_CONTAINER_PORT}/${POSTGRES_DB}?schema=api # note the api container has to use postgres internal port and internal hostname, it can't localhost with external port.
+            REDIS_HOST: ${REDIS_CONTAINER_NAME} # note that the api has to use redis host name in container, it can't use localhost to access the redis in container
+            REDIS_HOST_PORT: ${REDIS_CONTAINER_PORT}
         restart: unless-stopped
         depends_on:
-            - dev-db
-            - dev-redis
-    dev-db:
+            - dev_api_postgres
+            - dev_api_redis
+    dev_api_postgres:
         image: postgres:13.5
-        container_name: 'nestjs_postgres_dev'
+        container_name: ${POSTGRES_CONTAINER_NAME}
         restart: always
         env_file:
             - .env
@@ -37,41 +38,57 @@ services:
             POSTGRES_USER: ${POSTGRES_USER}
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
         volumes:
-            - pgdevdata:/var/lib/postgresql/data
+            - dev-api-postgres:/var/lib/postgresql/data
         ports:
-            - '5434:5432'
+            - ${POSTGRES_HOST_PORT}:${POSTGRES_CONTAINER_PORT}
         networks:
-            - postgres_nestjs_net
-    test-db:
+            - api-postgres-network
+        depends_on:
+            - dev_api_redis
+    test_api_postgres:
         image: postgres:13.5
-        container_name: 'nestjs_postgres_test'
+        container_name: ${POSTGRES_CONTAINER_NAME}
         restart: always
+        env_file:
+            - .env.test
         environment:
             POSTGRES_DB: ${POSTGRES_DB}
             POSTGRES_USER: ${POSTGRES_USER}
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
         ports:
-            - '5435:5432'
-    dev-redis:
-        image: 'redis:alpine'
-        container_name: 'nestjs_redis_dev'
-        ports:
-            - '6379:6379'
-        command: redis-server --save 20 1 --loglevel warning --requirepass SecureRedisPassportNotForSharing
-        volumes:
-            - rddevdata:/var/lib/redis/data
+            - ${POSTGRES_HOST_PORT}:${POSTGRES_CONTAINER_PORT}
         networks:
-            - redis_nestjs_net
-    test-redis:
-        image: 'redis:alpine'
-        container_name: 'nestjs_redis_test'
+            - api-postgres-network
+        depends_on:
+            - test_api_redis
+    dev_api_redis:
+        container_name: ${REDIS_CONTAINER_NAME}
+        restart: always
+        image: redis:alpine
+        env_file:
+            - .env.test
         ports:
-            - '6380:6379'
-        command: redis-server --save 20 1 --loglevel warning --requirepass SecureRedisPassportNotForSharing
+            - ${REDIS_HOST_PORT}:${REDIS_CONTAINER_PORT}
+        command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
+        volumes:
+            - dev-api-redis:/var/lib/redis/data
+        networks:
+            - api-redis-network
+    test_api_redis:
+        container_name: ${REDIS_CONTAINER_NAME}
+        restart: always
+        image: redis:alpine
+        env_file:
+            - .env
+        ports:
+            - ${REDIS_HOST_PORT}:${REDIS_CONTAINER_PORT}
+        command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
+        networks:
+            - api-redis-network
 volumes:
-    pgdevdata:
-    rddevdata:
+    dev-api-postgres:
+    dev-api-redis:
 networks:
-    postgres_nestjs_net:
-    redis_nestjs_net:
-    app_nestjs_net:
+    api-network:
+    api-redis-network:
+    api-postgres-network:

@@ -9,7 +9,7 @@ import { JwtAuthGuard, RolesGuard } from './auth/guards';
 import { CategoryModule } from './category/category.module';
 import { Environment } from './common';
 import { HttpCacheInterceptor } from './common/interceptors';
-import { validate } from './common/validates';
+import { validate } from './common/validators';
 import { PostModule } from './post/post.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
@@ -42,7 +42,7 @@ export const logger = WinstonModule.createLogger({
         CacheModule.register({
             store: redisStore,
             host: process.env.REDIS_HOST,
-            port: process.env.REDIS_PORT,
+            port: process.env.REDIS_HOST_PORT,
             auth_pass: process.env.REDIS_PASSWORD,
             isGlobal: true,
             ttl: Number(process.env.CACHE_TTL_IN_SECOND) || 5,

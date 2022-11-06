@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString, Validate } from 'class-validator';
+import { CategoryExistsValidator } from '../validators';
 
 export class CreatePostDto {
     @ApiProperty({ description: 'title of the post', required: true })
@@ -14,7 +15,7 @@ export class CreatePostDto {
 
     @ApiProperty({ description: 'category id of the post category', required: true })
     @IsNotEmpty()
-    // @IsNumber()
-    // @Validate(CategoryExistsRule)
+    @IsNumber()
+    @Validate(CategoryExistsValidator)
     categoryId: number;
 }

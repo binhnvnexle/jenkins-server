@@ -1,5 +1,5 @@
 import { Post } from '.prisma/client';
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { CategoryService } from '../category/category.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { EditPostDto } from './dto';
@@ -40,8 +40,8 @@ export class PostService {
         return { items, totalCount };
     }
 
-    getPostById(postId: number) {
-        return this.prisma.post.findUnique({
+    async getPostById(postId: number) {
+        const post = await this.prisma.post.findUnique({
             where: {
                 id: postId,
             },
@@ -60,6 +60,10 @@ export class PostService {
                 },
             },
         });
+        if (!post) {
+            throw new NotFoundException('post no found');
+        }
+        return post;
     }
 
     async editPostById(userId: number, postId: number, dto: EditPostDto): Promise<Post> {

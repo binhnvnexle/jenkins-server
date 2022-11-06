@@ -51,6 +51,7 @@ export class AuthController {
     @Post('signin')
     signin(
         @GetUser() user: UserModel,
+        @Body() dto: AuthDto,
     ): Promise<{ user: User; accessToken: string; refreshToken: string }> {
         return this.authService.localSignin(user);
     }

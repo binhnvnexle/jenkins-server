@@ -4,14 +4,6 @@ import { ShortCategoryEntity } from '../../category/entities';
 import { ShortUserEntity } from '../../user/entities';
 
 export class PostEntity implements Post {
-    // id: number;
-    // createdAt: Date;
-    // updatedAt: Date;
-    // title: string;
-    // description: string;
-    // userId: number;
-    // categoryId: number;
-
     @ApiProperty({ description: 'id of the post' })
     id: number;
     @ApiProperty({ description: 'created date of the post' })

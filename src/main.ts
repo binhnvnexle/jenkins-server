@@ -67,6 +67,6 @@ async function bootstrap() {
     }
 
     // Run the application on a network port
-    await app.listen(config.get('PORT'));
+    await app.listen(config.get('API_HOST_PORT'));
 }
 bootstrap();

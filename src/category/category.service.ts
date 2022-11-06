@@ -1,5 +1,5 @@
 import { Category } from '.prisma/client';
-import { ForbiddenException, HttpException, Injectable } from '@nestjs/common';
+import { ForbiddenException, HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { isRecordExistsError } from '../common/utils';
 import { PrismaService } from '../prisma/prisma.service';
 import { EditCategoryDto } from './dto';
@@ -38,12 +38,16 @@ export class CategoryService {
         });
     }
 
-    getCategoryById(categoryId: number) {
-        return this.prisma.category.findUnique({
+    async getCategoryById(categoryId: number) {
+        const category = await this.prisma.category.findUnique({
             where: {
                 id: categoryId,
             },
         });
+        if (!category) {
+            throw new NotFoundException('category no found');
+        }
+        return category;
     }
 
     async editCategoryById(categoryId: number, dto: EditCategoryDto): Promise<Category> {

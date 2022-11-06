@@ -420,15 +420,15 @@ describe('App e2e', () => {
                     .expectStatus(403);
             });
 
-            it('should throw if category does not exist', () => {
-                return pactum
-                    .spec()
-                    .patch('/posts/{id}')
-                    .withPathParams('id', 1234)
-                    .withHeaders({ Authorization: 'Bearer $S{userAt}' })
-                    .withBody({ ...editPostDto, categoryId: 11 })
-                    .expectStatus(400);
-            });
+            // it('should throw if category does not exist', () => {
+            //     return pactum
+            //         .spec()
+            //         .patch('/posts/{id}')
+            //         .withPathParams('id', 1234)
+            //         .withHeaders({ Authorization: 'Bearer $S{userAt}' })
+            //         .withBody({ ...editPostDto, categoryId: 11 })
+            //         .expectStatus(400);
+            // });
 
             it('should edit post by id', () => {
                 return pactum

@@ -13,7 +13,11 @@ class EnvironmentVariables {
 
     @IsNotEmpty()
     @IsNumber()
-    POSTGRES_PORT: number;
+    POSTGRES_HOST_PORT: number;
+
+    @IsNotEmpty()
+    @IsNumber()
+    POSTGRES_CONTAINER_PORT: number;
 
     @IsNotEmpty()
     @IsString()
@@ -29,7 +33,31 @@ class EnvironmentVariables {
 
     @IsNotEmpty()
     @IsString()
+    POSTGRES_CONTAINER_NAME: string;
+
+    @IsNotEmpty()
+    @IsString()
     DATABASE_URL: string;
+
+    @IsNotEmpty()
+    @IsString()
+    REDIS_HOST: string;
+
+    @IsNotEmpty()
+    @IsNumber()
+    REDIS_HOST_PORT: number;
+
+    @IsNotEmpty()
+    @IsNumber()
+    REDIS_CONTAINER_PORT: number;
+
+    @IsNotEmpty()
+    @IsString()
+    REDIS_PASSWORD: string;
+
+    @IsNotEmpty()
+    @IsString()
+    REDIS_CONTAINER_NAME: string;
 
     @IsNotEmpty()
     @IsString()
@@ -62,16 +90,6 @@ class EnvironmentVariables {
     @IsString()
     SWAGGER_PATH: string;
 
-    @IsNotEmpty()
-    @IsString()
-    REDIS_HOST: string;
-
-    @IsNumber()
-    REDIS_PORT: number;
-
-    @IsString()
-    REDIS_PASSWORD: string;
-
     @IsNumber()
     CACHE_TTL_IN_SECOND: number;
 
@@ -80,7 +98,11 @@ class EnvironmentVariables {
 
     @IsNotEmpty()
     @IsNumber()
-    PORT: number;
+    API_HOST_PORT: number;
+
+    @IsNotEmpty()
+    @IsNumber()
+    API_CONTAINER_PORT: number;
 
     @IsString()
     @IsEnum(LogLevel)

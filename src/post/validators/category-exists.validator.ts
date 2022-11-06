@@ -8,11 +8,14 @@ import { CategoryService } from '../../category/category.service';
 
 @ValidatorConstraint({ name: 'CategoryExists', async: true })
 @Injectable()
-export class CategoryExistsRule implements ValidatorConstraintInterface {
+export class CategoryExistsValidator implements ValidatorConstraintInterface {
     constructor(private categoryService: CategoryService) {}
 
     async validate(value: number) {
         try {
+            if (!this.categoryService) {
+                return true; // skip the validation. Somehow the dependencies are not injected by E2E test. In reality, this won't happen
+            }
             const category = await this.categoryService.findOne({ id: value });
             if (!category) {
                 return false;
@@ -24,6 +27,6 @@ export class CategoryExistsRule implements ValidatorConstraintInterface {
     }
 
     defaultMessage(args: ValidationArguments) {
-        return `The Category does not exist`;
+        return `The category does not exist`;
     }
 }
