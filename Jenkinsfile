@@ -7,7 +7,7 @@ pipeline {
         AWS_ACCOUNT_ID = "927190304276"
         ECR_REGISTRY = "927190304276.dkr.ecr.ap-east-1.amazonaws.com"
         ECR_REPOSITORY = "test-dev"
-        IMAGE_TAG = IMAGE_TAG = "${{ github.sha }}" as String
+        IMAGE_TAG = "${{ github.sha }}" as String
     }
     stages {
         stage('Build') {
