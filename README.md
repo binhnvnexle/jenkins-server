@@ -2,6 +2,8 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
 
+[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
+[circleci-url]: https://circleci.com/gh/nestjs/nest
 
   <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
     <p align="center">
@@ -22,62 +24,50 @@
 
 ## Description
 
-This is a NestJS template for monolith structure used at Nexlesoft. There are three different branches for different database providers
-
-- postgresql
-- mongo
-- mysql
-
-Check out appropriate branch matching with the database provider you will work with.
-
-Videos about this template can be found at
-[NestJS Training](https://drive.google.com/drive/folders/1tT-k0jy1B3jguufWfQme9mDULWXJZnqs?usp=sharing)
-
-For microservice NestJs template, checkout a different repo at [nestjs-api-microservice-template](https://github.com/nexlesoft/nestjs-api-microservice-template)
+[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
 ## Installation
 
 ```bash
-# Install all the dependencies
-$ yarn install
-```
-
-## Create environment variables
-
-```bash
-# copy default variables from .env.example to .env
-$ cp .env.example .env
-```
-
-## Start postgres and redis docker container
-
-```bash
-# Start redis and postgres containers
-$ yarn service:dev:restart
+$ npm install
 ```
 
 ## Running the app
 
 ```bash
 # development
-$ yarn start
+$ npm run start
 
 # watch mode
-$ yarn start:dev
+$ npm run start:dev
 
 # production mode
-$ yean start:prod
+$ npm run start:prod
 ```
 
 ## Test
 
 ```bash
+# unit tests
+$ npm run test
 
 # e2e tests
-$ yarn test:e2e
+$ npm run test:e2e
 
+# test coverage
+$ npm run test:cov
 ```
 
+## Support
+
+Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+
+## Stay in touch
+
+- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
+- Website - [https://nestjs.com](https://nestjs.com/)
+- Twitter - [@nestframework](https://twitter.com/nestframework)
+
 ## License
-P/s : Testing
+
 Nest is [MIT licensed](LICENSE).
